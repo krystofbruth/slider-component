@@ -1,0 +1,39 @@
+.Slider {
+  --track: rgb(190, 190, 190);
+  --selection: black;
+  --thumb: black;
+
+  position: relative;
+  width: 100%;
+  height: 0.45em;
+  background-color: var(--track);
+  border-radius: 0.25em;
+}
+
+.Slider div.progress {
+  content: "";
+  border-radius: 0.25em;
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: var(--selection);
+  width: 0;
+}
+
+.Slider div.thumb {
+  content: "";
+  position: absolute;
+  height: 0.95em;
+  width: 0.95em;
+  border-radius: 1em;
+  background-color: var(--thumb);
+  top: -0.25em;
+  left: 0;
+  visibility: hidden;
+}
+
+.Slider:hover div.thumb,
+.Slider div.thumb.active {
+  visibility: visible;
+}

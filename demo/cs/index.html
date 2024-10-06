@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://api.ssps.cajthaml.eu/file/64d9f18f79dad891e8a07c73"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../src/SliderComponent.css" />
+    <link rel="stylesheet" href="../demoSheet.css" />
+    <title>Slider component</title>
+    <style>
+      /* Styling for the purposes of this demo */
+      body {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Roboto", sans-serif;
+        font-size: min(4vw, 18px);
+        line-height: 1.35;
+        padding: 5em 2em;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-weight: 700;
+        font-size: 2em;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.6em;
+        font-weight: 700;
+      }
+
+      h3 {
+        font-size: 1.3em;
+        font-weight: 500;
+        margin-top: 0.5em;
+      }
+
+      h4 {
+        font-size: 1.15em;
+        margin-top: 0.25em;
+      }
+
+      p + h4 {
+        margin-top: 1em;
+      }
+
+      i {
+        font-style: italic;
+      }
+
+      b {
+        font-weight: 700;
+      }
+
+      main {
+        width: 70%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+      }
+
+      main > section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+      }
+
+      code {
+        font-family: "Roboto Mono", monospace;
+        background-color: black;
+        color: white;
+        padding: 0.1em 0.2em;
+        border-radius: 0.25em;
+        box-sizing: border-box;
+        text-wrap: wrap;
+      }
+
+      pre:has(code) {
+        display: block;
+        width: fit-content;
+        background-color: black;
+        padding: 0.5em;
+        box-sizing: border-box;
+        border-radius: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Slider komponent</h1>
+
+      <section class="installation">
+        <h2>Instalace a využití</h2>
+
+        <h3>1. Vložení CSS a JS souborů</h3>
+        <p>
+          Vložte následující kód do hlavičky HTML dokumentu pro nalinkování CSS
+          stylování:
+        </p>
+        <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;SliderComponent.css&quot;&gt;</code></pre>
+        <p>
+          Poté na konci HTML těla (ale před začátkem vašeho kódu) importujte JS
+          soubor:
+        </p>
+        <pre><code>&lt;script src=&quot;SliderComponent.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+        <h3>2. Vytvoření HTML struktury komponentu</h3>
+        <p>Vložte následující HTML prvek na stránku:</p>
+        <pre><code>&lt;div class=&quot;Slider&quot; draggable=&quot;false&quot;&gt;&lt;/div&gt;</code></pre>
+        <p>
+          Tento prvek bude dále v dokumentaci nazýván jako
+          <i>kořenový prvek</i>.
+        </p>
+
+        <h3>3. Inicializace komponentu</h3>
+        <p>
+          Pro inicializaci je potřeba zavolat konstruktor objektu
+          <code>SliderComponent</code> (definovaný v kódu naimportovaném v
+          předchozím kroku). Povinný je pouze první parametr konstruktoru, do
+          kterého je nutné vložit DOM objekt kořenového prvku komponentu:
+        </p>
+        <pre><code>const sliderElement = document.querySelector("div.Slider");
+const slider = new SliderComponent(sliderElement);</code></pre>
+
+        <h3>4. (Volitelné) Vložení parametrů</h3>
+        <p>
+          Slider má různé konfigurační možnosti, které lze nastavit pomocí
+          vložení objektu s parametry jako druhý parametr volaného konstruktoru:
+        </p>
+        <pre><code>new SliderComponent(sliderElement, { mode: "staggered", startValue: 10, min: 5, max: 60});</code></pre>
+        <p>
+          Seznam všech parametrů a jejich používání viz
+          <a href="#techdocs">technickou dokumentaci</a>.
+        </p>
+      </section>
+
+      <section class="precise">
+        <h2>Precizní mód</h2>
+        <p>
+          Dovoluje nastavení minima a maxima, po každé menší změně vysílá
+          <code>change</code> událost, kterou je schopné zachytit a aktualizovat
+          v reálném čase další prvky či provádět akce. Po konci interakce je
+          vyslána událost <code>finished</code>. Jedná se o výchozí mód
+          (nastaven v případě, že není mód v parametrech definován).
+        </p>
+        <div class="Slider" draggable="false"></div>
+        <p>Aktuální hodnota: <span class="output">0</span></p>
+        <p>Finální hodnota po konci interakce: <span class="final"></span></p>
+      </section>
+
+      <section class="performance">
+        <h2>Mód výkon</h2>
+        <p>
+          Optimalizovaný kód dovolující běh komponentu i na slabších zařízeních.
+          Nevysílá událost <code>change</code> (není možné jej přímo
+          aktualizovat v reálném čase) a podporuje pouze minimum a maximum 0 -
+          100 (nastavení minima a maxima uživatelem není respektováno).
+        </p>
+        <div class="Slider" draggable="false"></div>
+        <p>Finální hodnota po konci interakce: <span class="final"></span></p>
+      </section>
+
+      <section class="staggered">
+        <h2>Mód staggered</h2>
+        <p>
+          Rozkouskuje slider na několik bodů, které mohou být vybrány. Vždy
+          vrací celé číslo a aktualizuje se vždy při změně stavu volby (vysílá
+          <code>change</code> událost). Počet kousků je závislý na minimu a
+          maximu.
+        </p>
+        <div class="Slider" draggable="false"></div>
+        <p>Aktuální hodnota: <span class="output">5</span></p>
+      </section>
+
+      <section class="styling">
+        <h2>Stylování slideru</h2>
+        <p>
+          Komponenta má na svém kořenu <code>div.Slider</code> nastavené tři CSS
+          proměnné, se kterými lze snadno manipulovat buď globálně (využitím CSS
+          stylesheets), zaměřeně dle postavení v hierarchii HTML (opět využitím
+          CSS stylesheets a správných CSS selektorů) a zaměřené na specifický
+          prvek (využitím in-line CSS).
+        </p>
+
+        <h3>Využití CSS stylesheets</h3>
+        <pre><code>section.styling div.Slider {
+  --track: brown;
+  --selection: blue;
+  --thumb: green;
+}</code></pre>
+
+        <div class="Slider" draggable="false"></div>
+
+        <h3>Využití inline CSS</h3>
+        <pre><code>&lt;div class=&quot;Slider&quot; draggable=&quot;false&quot; style=&quot;--track: mediumvioletred; --selection: gray; --thumb: blue&quot;&gt;&lt;/div&gt;</code></pre>
+
+        <div
+          class="Slider"
+          draggable="false"
+          style="--track: mediumvioletred; --selection: gray; --thumb: blue"
+        ></div>
+      </section>
+
+      <section class="demo">
+        <h2>Příklad použití – výběr obtížnosti ve hře</h2>
+
+        <div class="Slider" draggable="false"></div>
+        <p>Nastavení obtížnosti: <span class="selection"></span></p>
+      </section>
+
+      <section>
+        <h2 id="techdocs">Technická dokumentace</h2>
+
+        <h3>Parametry</h3>
+        <h4><code>mode</code> (řetězec)</h4>
+        <p>
+          Slouží k nastavení operačního módu. Pro více informací k rozdílům viz
+          základní dokumentaci výše.
+        </p>
+
+        <h4><code>min</code> (číslo)</h4>
+        <p>
+          Nastaví minimální hodnotu, která může být sliderem vybrána. Parametr
+          je ignorován v případě, že je mód nastaven na <code>performance</code>
+        </p>
+
+        <h4><code>max</code> (číslo)</h4>
+        <p>
+          Nastaví maximální hodnotu, která může být sliderem vybrána. Parametr
+          je ignorován v případě, že je mód nastaven na <code>performance</code>
+        </p>
+
+        <h4><code>startValue</code> (číslo)</h4>
+        <p>Nastaví počáteční hodnotu slideru.</p>
+
+        <h3>Funkce</h3>
+        <h4><code>SliderComponent(root, params)</code> – konstruktor</h4>
+        <p>Inicializuje komponent, vrátí objekt <code>SliderComponent</code></p>
+        <p><code>root</code> – DOM objekt kořenového prvku komponentu.</p>
+        <p><code>params</code> – plain objekt s parametry (viz výše).</p>
+
+        <h4><code>move(value)</code> (číslo)</h4>
+        <p>
+          <code>value</code> – číslo. V případě, že je nastaven mód
+          <code>staggered</code> se desetinná čísla zaokrouhlí na nejbližší celé
+          číslo.
+        </p>
+
+        <h3>Události</h3>
+        <h4><code>change</code></h4>
+        <p>
+          Je vysílána při změně hodnoty u operačních módů <code>precise</code> a
+          <code>staggered</code>. Událost obsahuje vždy vlastnost
+          <code>value</code> s novou hodnotou.
+        </p>
+        <p>
+          <b>V módu <code>performance</code> tato událost není vysílána!</b>
+        </p>
+
+        <h4><code>finished</code></h4>
+        <p>
+          Je vysílána při ukončení interakce se sliderem uživatelem (tj. po
+          konci stisknutí tlačítka myši). Obsahuje vždy vlastnost
+          <code>value</code> s aktuální hodnotou.
+        </p>
+      </section>
+    </main>
+  </body>
+
+  <script src="../../src/SliderComponent.js"></script>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      let preciseSlider = new SliderComponent(
+        document.querySelector("section.precise > div.Slider"),
+        {
+          mode: "precise",
+          min: 0,
+          max: 50,
+          startValue: 10,
+        }
+      );
+      let preciseOutput = document.querySelector("section.precise span.output");
+      let preciseFinal = document.querySelector("section.precise span.final");
+
+      preciseSlider.addEventListener("change", (e) => {
+        preciseOutput.innerHTML = e.value;
+      });
+
+      preciseSlider.addEventListener("finished", (e) => {
+        preciseFinal.innerHTML = e.value;
+      });
+
+      let perfSlider = new SliderComponent(
+        document.querySelector("section.performance > div.Slider"),
+        {
+          mode: "performance",
+        }
+      );
+
+      let perfFinal = document.querySelector("section.performance span.final");
+
+      perfSlider.addEventListener("finished", (e) => {
+        perfFinal.innerHTML = e.value;
+      });
+
+      let stagSlider = new SliderComponent(
+        document.querySelector("section.staggered > div.Slider"),
+        {
+          mode: "staggered",
+          min: 5,
+          max: 15,
+        }
+      );
+
+      let stagOutput = document.querySelector("section.staggered span.output");
+
+      stagSlider.addEventListener("change", (e) => {
+        stagOutput.innerHTML = e.value;
+      });
+
+      new SliderComponent(document.querySelector("section.styling div.Slider"));
+      new SliderComponent(
+        document.querySelector("section.styling div.Slider:nth-of-type(2)")
+      );
+    });
+  </script>
+
+  <script>
+    // Demo showcase - selecting a difficulty level
+    const sliderElement = document.querySelector("section.demo div.Slider");
+    let slider = new SliderComponent(sliderElement, {
+      mode: "staggered",
+      min: 0,
+      max: 3,
+    });
+
+    let difficulties = [
+      { name: "Nováček", color: "#4682B4" },
+      { name: "Snadný", color: "#008000" },
+      { name: "Pokročilý", color: "#ffdf00" },
+      { name: "Náročný", color: "#FF0000" },
+    ];
+    const selection = document.querySelector("section.demo span.selection");
+    selection.innerHTML = difficulties[0].name;
+    sliderElement.style.setProperty("--track", `${difficulties[0].color}55`);
+    sliderElement.style.setProperty("--selection", difficulties[0].color);
+    sliderElement.style.setProperty("--thumb", difficulties[0].color);
+    selection.style.color = difficulties[0].color;
+
+    slider.addEventListener("change", (event) => {
+      selection.innerHTML = difficulties[event.value].name;
+      sliderElement.style.setProperty(
+        "--track",
+        `${difficulties[event.value].color}55`
+      );
+      sliderElement.style.setProperty(
+        "--selection",
+        difficulties[event.value].color
+      );
+      sliderElement.style.setProperty(
+        "--thumb",
+        difficulties[event.value].color
+      );
+      selection.style.color = difficulties[event.value].color;
+    });
+  </script>
+</html>

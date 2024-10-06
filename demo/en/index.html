@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://api.ssps.cajthaml.eu/file/64d9f18f79dad891e8a07c73"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../src/SliderComponent.css" />
+    <link rel="stylesheet" href="../demoSheet.css" />
+    <title>Slider component</title>
+    <style>
+      /* Styling for the purposes of this demo */
+      body {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Roboto", sans-serif;
+        font-size: min(4vw, 18px);
+        line-height: 1.35;
+        padding: 5em 2em;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-weight: 700;
+        font-size: 2em;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 1.6em;
+        font-weight: 700;
+      }
+
+      h3 {
+        font-size: 1.3em;
+        font-weight: 500;
+        margin-top: 0.5em;
+      }
+
+      h4 {
+        font-size: 1.15em;
+        margin-top: 0.25em;
+      }
+
+      p + h4 {
+        margin-top: 1em;
+      }
+
+      i {
+        font-style: italic;
+      }
+
+      b {
+        font-weight: 700;
+      }
+
+      main {
+        width: 70%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+      }
+
+      main > section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+      }
+
+      code {
+        font-family: "Roboto Mono", monospace;
+        background-color: black;
+        color: white;
+        padding: 0.1em 0.2em;
+        border-radius: 0.25em;
+        box-sizing: border-box;
+        text-wrap: wrap;
+      }
+
+      pre:has(code) {
+        display: block;
+        width: fit-content;
+        background-color: black;
+        padding: 0.5em;
+        box-sizing: border-box;
+        border-radius: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Slider komponent</h1>
+
+      <section class="installation">
+        <h2>Installation and usage</h2>
+
+        <h3>1. Including CSS and JS files</h3>
+        <p>
+          Include the following code in the <code>head</code> element of your
+          HTML document:
+        </p>
+        <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;SliderComponent.css&quot;&gt;</code></pre>
+        <p>
+          Then at the end of your <code>body</code> element, but before your
+          scripts:
+        </p>
+        <pre><code>&lt;script src=&quot;SliderComponent.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+        <h3>2. Creating the HTML structure</h3>
+        <p>Insert the following HTML code:</p>
+        <pre><code>&lt;div class=&quot;Slider&quot; draggable=&quot;false&quot;&gt;&lt;/div&gt;</code></pre>
+        <p>
+          This element will be reffered to as the
+          <i>root element</i>
+          in this documentation moving forward.
+        </p>
+
+        <h3>3. Initializing the component</h3>
+        <p>
+          Initialize the component by calling the constructor of the
+          <code>SliderComponent</code> object (defined in the script included in
+          the 1st step) and as a parameter, include the DOM object of the root
+          element:
+        </p>
+        <pre><code>const sliderElement = document.querySelector("div.Slider");
+const slider = new SliderComponent(sliderElement);</code></pre>
+
+        <h3>4. (Optional) The params object</h3>
+        <p>
+          A slider component may be configured using the second paramater in the
+          constructor to pass an object with your desired configuration:
+        </p>
+        <pre><code>new SliderComponent(sliderElement, { mode: "staggered", startValue: 10, min: 5, max: 60});</code></pre>
+        <p>
+          All parameter options and their usage can be found in the
+          <a href="#techdocs">technical documentation</a>.
+        </p>
+      </section>
+
+      <section class="precise">
+        <h2>Precision mode</h2>
+        <p>
+          Allows setting the <code>min</code> and <code>max</code> params,
+          firing the <code>change</code> event every time the mouse moves
+          (allowing for real-time updates). After the end of an interaction, the
+          <code>finished</code> event is fired. vyslána událost
+          <code>finished</code>. This is the default mode
+        </p>
+        <div class="Slider" draggable="false"></div>
+        <p>Current value: <span class="output">0</span></p>
+        <p>
+          Final value after the interaction is over: <span class="final"></span>
+        </p>
+      </section>
+
+      <section class="performance">
+        <h2>Performance mode</h2>
+        <p>
+          Optimized to run on less powerful devices, automatically sets
+          <code>min</code> and <code>max</code> to <code>0</code> and
+          <code>100</code> and doesn't fire the <code>change</code> event.
+        </p>
+        <div class="Slider" draggable="false"></div>
+        <p>
+          Final value after the interaction is over: <span class="final"></span>
+        </p>
+      </section>
+
+      <section class="staggered">
+        <h2>Staggered mode</h2>
+        <p>
+          Splits the slider into breakpoints according to the range provided by
+          <code>min</code> and <code>max</code>. The value is always an integer.
+        </p>
+        <div class="Slider" draggable="false"></div>
+        <p>Current value: <span class="output">5</span></p>
+      </section>
+
+      <section class="styling">
+        <h2>Stylování slideru</h2>
+        <p>
+          Component has on its root element three CSS variables that can be
+          manipulated with either globally (using CSS stylesheets), selectively
+          (using CSS stylesheets and CSS selectors) or specifically (using
+          inline CSS).
+        </p>
+
+        <h3>Styling using CSS stylesheets</h3>
+        <pre><code>section.styling div.Slider {
+  --track: brown;
+  --selection: blue;
+  --thumb: green;
+}</code></pre>
+
+        <div class="Slider" draggable="false"></div>
+
+        <h3>Styling using inline CSS</h3>
+        <pre><code>&lt;div class=&quot;Slider&quot; draggable=&quot;false&quot; style=&quot;--track: mediumvioletred; --selection: gray; --thumb: blue&quot;&gt;&lt;/div&gt;</code></pre>
+
+        <div
+          class="Slider"
+          draggable="false"
+          style="--track: mediumvioletred; --selection: gray; --thumb: blue"
+        ></div>
+      </section>
+
+      <section class="demo">
+        <h2>Use case - selecting a difficulty level in a game</h2>
+
+        <div class="Slider" draggable="false"></div>
+        <p>Difficulty setting: <span class="selection"></span></p>
+      </section>
+
+      <section>
+        <h2 id="techdocs">Technical documentation</h2>
+
+        <h3>Params object</h3>
+        <h4><code>mode</code> (string)</h4>
+        <p>
+          Used to set the operational mode, refer to the documentation above for
+          their list and differences.
+        </p>
+
+        <h4><code>min</code> (number)</h4>
+        <p>
+          Sets the minimal value that can be selected using the slider.
+          Parameter is ignored in case the operational mode is set to
+          <code>performance</code>.
+        </p>
+
+        <h4><code>max</code> (number)</h4>
+        <p>
+          Sets the maximal value that can be selected using the slider.
+          Parameter is ignored in case the operational mode is set to
+          <code>performance</code>.
+        </p>
+
+        <h4><code>startValue</code> (number)</h4>
+        <p>Sets the initial value of the slider.</p>
+
+        <h3>Functions</h3>
+        <h4><code>SliderComponent(root, params)</code> - constructor</h4>
+        <p>
+          Intiliazes the component and returns a
+          <code>SliderComponent</code> object.
+        </p>
+        <p><code>root</code> - DOM objekt kořenového prvku komponentu.</p>
+        <p>
+          <code>params</code> - plain JS object with parameters (more info
+          above).
+        </p>
+
+        <h4><code>move(value)</code> (number)</h4>
+        <p>
+          Moves the slider to the designated value.
+          <code>value</code> - number. In case the mode is set to
+          <code>staggered</code>, all floating point numbers are rounded up to
+          the nearest integer.
+        </p>
+
+        <h3>Events</h3>
+        <h4><code>change</code></h4>
+        <p>
+          Fired during any value change if the mode is set to
+          <code>precise</code> or <code>staggered</code>. The Event object
+          contains property <code>value</code> with the new value.
+        </p>
+        <p>
+          <b>In the <code>performance</code> mode this event is not fired!</b>
+        </p>
+
+        <h4><code>finished</code></h4>
+        <p>
+          Fired when the user finishes the interaction (after the user lets go
+          of the mouse button). The Event object contains property
+          <code>value</code> with the new value.
+        </p>
+      </section>
+    </main>
+  </body>
+
+  <script src="../../src/SliderComponent.js"></script>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      let preciseSlider = new SliderComponent(
+        document.querySelector("section.precise > div.Slider"),
+        {
+          mode: "precise",
+          min: 0,
+          max: 50,
+          startValue: 10,
+        }
+      );
+      let preciseOutput = document.querySelector("section.precise span.output");
+      let preciseFinal = document.querySelector("section.precise span.final");
+
+      preciseSlider.addEventListener("change", (e) => {
+        preciseOutput.innerHTML = e.value;
+      });
+
+      preciseSlider.addEventListener("finished", (e) => {
+        preciseFinal.innerHTML = e.value;
+      });
+
+      let perfSlider = new SliderComponent(
+        document.querySelector("section.performance > div.Slider"),
+        {
+          mode: "performance",
+        }
+      );
+
+      let perfFinal = document.querySelector("section.performance span.final");
+
+      perfSlider.addEventListener("finished", (e) => {
+        perfFinal.innerHTML = e.value;
+      });
+
+      let stagSlider = new SliderComponent(
+        document.querySelector("section.staggered > div.Slider"),
+        {
+          mode: "staggered",
+          min: 5,
+          max: 15,
+        }
+      );
+
+      let stagOutput = document.querySelector("section.staggered span.output");
+
+      stagSlider.addEventListener("change", (e) => {
+        stagOutput.innerHTML = e.value;
+      });
+
+      new SliderComponent(document.querySelector("section.styling div.Slider"));
+      new SliderComponent(
+        document.querySelector("section.styling div.Slider:nth-of-type(2)")
+      );
+    });
+  </script>
+
+  <script>
+    // Demo showcase - selecting a difficulty level
+    const sliderElement = document.querySelector("section.demo div.Slider");
+    let slider = new SliderComponent(sliderElement, {
+      mode: "staggered",
+      min: 0,
+      max: 3,
+    });
+
+    let difficulties = [
+      { name: "Novice", color: "#4682B4" },
+      { name: "Easy", color: "#008000" },
+      { name: "Advanced", color: "#ffdf00" },
+      { name: "Hard", color: "#FF0000" },
+    ];
+    const selection = document.querySelector("section.demo span.selection");
+    selection.innerHTML = difficulties[0].name;
+    sliderElement.style.setProperty("--track", `${difficulties[0].color}55`);
+    sliderElement.style.setProperty("--selection", difficulties[0].color);
+    sliderElement.style.setProperty("--thumb", difficulties[0].color);
+    selection.style.color = difficulties[0].color;
+
+    slider.addEventListener("change", (event) => {
+      selection.innerHTML = difficulties[event.value].name;
+      sliderElement.style.setProperty(
+        "--track",
+        `${difficulties[event.value].color}55`
+      );
+      sliderElement.style.setProperty(
+        "--selection",
+        difficulties[event.value].color
+      );
+      sliderElement.style.setProperty(
+        "--thumb",
+        difficulties[event.value].color
+      );
+      selection.style.color = difficulties[event.value].color;
+    });
+  </script>
+</html>

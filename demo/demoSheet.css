@@ -1,0 +1,5 @@
+section.styling div.Slider:first-of-type {
+  --track: brown;
+  --selection: blue;
+  --thumb: green;
+}
